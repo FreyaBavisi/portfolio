@@ -1,0 +1,455 @@
+---
+interface SkillGroup {
+  category: string;
+  skills: string[];
+}
+
+interface Props {
+  skillGroups: SkillGroup[];
+}
+
+const { skillGroups } = Astro.props;
+
+/*
+ * Technology logos.
+ *
+ * Only use logos for actual technologies/services.
+ * Engineering concepts use the fallback icons below.
+ */
+const iconMap: Record<string, string> = {
+  "Node.js": "https://cdn.simpleicons.org/nodedotjs",
+  Express: "https://cdn.simpleicons.org/express",
+  TypeScript: "https://cdn.simpleicons.org/typescript",
+  JavaScript: "https://cdn.simpleicons.org/javascript",
+
+  React: "https://cdn.simpleicons.org/react",
+  "Ant Design": "https://cdn.simpleicons.org/antdesign",
+  "SCSS Modules": "https://cdn.simpleicons.org/sass",
+
+  PostgreSQL: "https://cdn.simpleicons.org/postgresql",
+  Prisma: "https://cdn.simpleicons.org/prisma",
+  "Prisma ORM": "https://cdn.simpleicons.org/prisma",
+  MongoDB: "https://cdn.simpleicons.org/mongodb",
+
+  Redis: "https://cdn.simpleicons.org/redis",
+  "AWS S3": "https://cdn.simpleicons.org/amazonaws",
+  Razorpay: "https://cdn.simpleicons.org/razorpay",
+  "WhatsApp APIs": "https://cdn.simpleicons.org/whatsapp",
+  WhatsApp: "https://cdn.simpleicons.org/whatsapp",
+};
+
+/*
+ * Explicit section titles.
+ *
+ * These don't depend on the category names in skills.ts.
+ */
+const sectionTitles = [
+  "Backend Engineering",
+  "Data & Persistence",
+  "Frontend Engineering",
+  "Integrations & Services",
+  "Architecture & Engineering",
+];
+
+/*
+ * Small fallback symbols for things that are concepts
+ * rather than technologies with brand logos.
+ */
+const fallbackIcons: Record<string, string> = {
+  "REST APIs": "↗",
+  Webhooks: "⌁",
+  Migrations: "⇄",
+
+  RBAC: "◇",
+  Authentication: "⚿",
+  Authorization: "◈",
+  "API Architecture": "↗",
+
+  "Data Workflows": "⌘",
+  "CSV Imports": "⇩",
+  Reporting: "▥",
+};
+
+const getFallbackIcon = (skill: string) => {
+  return fallbackIcons[skill] ?? "•";
+};
+---
+
+<div class="tech-stack">
+  {
+    skillGroups.map((group, groupIndex) => {
+      const isArchitectureGroup = groupIndex === 4;
+
+      return (
+        <article
+          class:list={[
+            "tech-group",
+            isArchitectureGroup && "tech-group-wide",
+          ]}
+        >
+          <!-- CATEGORY HEADER -->
+          <div class="tech-group-header">
+            <span class="tech-group-number">
+              {String(groupIndex + 1).padStart(2, "0")}
+            </span>
+
+            <span class="tech-group-line"></span>
+
+            <h3>
+              {sectionTitles[groupIndex] ?? group.category}
+            </h3>
+          </div>
+
+          <!-- TECHNOLOGIES / CAPABILITIES -->
+          <div class="tech-skills">
+            {group.skills.map((skill) => {
+              const icon = iconMap[skill];
+
+              return (
+                <div class="tech-skill">
+                  <span class="tech-icon">
+                    {icon ? (
+                      <img
+                        src={icon}
+                        alt=""
+                        aria-hidden="true"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span class="fallback-icon">
+                        {getFallbackIcon(skill)}
+                      </span>
+                    )}
+                  </span>
+
+                  <span class="tech-name">
+                    {skill}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </article>
+      );
+    })
+  }
+</div>
+
+<style lang="scss">
+  @use "../styles/variables" as *;
+
+  /* ==================================================
+     MAIN GRID
+  ================================================== */
+
+  .tech-stack {
+    display: grid;
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 1px;
+
+    overflow: hidden;
+
+    border: 1px solid $border-subtle;
+    border-radius: $radius-xl;
+
+    background: $border-subtle;
+  }
+
+  /* ==================================================
+     CATEGORY CARD
+  ================================================== */
+
+  .tech-group {
+    min-height: 260px;
+
+    padding: 2rem 2.5rem 2.5rem;
+
+    background:
+      linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.018),
+        transparent 55%
+      ),
+      $bg-secondary;
+
+    transition:
+      background $transition-base,
+      box-shadow $transition-base;
+
+    &:hover {
+      background:
+        linear-gradient(
+          135deg,
+          rgba(96, 165, 250, 0.035),
+          transparent 55%
+        ),
+        $bg-surface;
+    }
+  }
+
+  /*
+   * Architecture & Engineering spans
+   * the entire bottom row.
+   */
+
+  .tech-group-wide {
+    grid-column: 1 / -1;
+
+    min-height: 220px;
+  }
+
+  /* ==================================================
+     CATEGORY HEADER
+  ================================================== */
+
+  .tech-group-header {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.9rem;
+
+    margin-bottom: 2.75rem;
+  }
+
+  .tech-group-number {
+    flex-shrink: 0;
+
+    color: $accent-blue;
+
+    font-family: $font-mono;
+
+    font-size: $text-xs;
+
+    line-height: 1;
+
+    letter-spacing: 0.08em;
+  }
+
+  .tech-group-line {
+    width: 48px;
+    height: 1px;
+
+    flex-shrink: 0;
+
+    background:
+      linear-gradient(
+        90deg,
+        $accent-blue,
+        rgba(96, 165, 250, 0)
+      );
+  }
+
+  .tech-group-header h3 {
+    display: block;
+
+    margin: 0;
+
+    color: $text-primary;
+
+    font-family: $font-display;
+
+    font-size: $text-lg;
+
+    font-weight: $weight-semibold;
+
+    line-height: 1.2;
+
+    letter-spacing: -0.02em;
+  }
+
+  /* ==================================================
+     TECHNOLOGY / CAPABILITY CHIPS
+  ================================================== */
+
+  .tech-skills {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 0.65rem;
+  }
+
+  .tech-skill {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 0.5rem;
+
+    min-height: 40px;
+
+    padding: 0.5rem 0.8rem;
+
+    border: 1px solid $border-subtle;
+
+    border-radius: $radius-pill;
+
+    background: rgba(255, 255, 255, 0.012);
+
+    color: $text-secondary;
+
+    font-family: $font-mono;
+
+    font-size: $text-sm;
+
+    white-space: nowrap;
+
+    transition:
+      border-color $transition-fast,
+      background $transition-fast,
+      color $transition-fast,
+      transform $transition-fast;
+
+    &:hover {
+      border-color: $border-hover;
+
+      background: rgba(255, 255, 255, 0.035);
+
+      color: $text-primary;
+
+      transform: translateY(-2px);
+    }
+  }
+
+  /* ==================================================
+     LOGO / ICON
+  ================================================== */
+
+  .tech-icon {
+    width: 15px;
+    height: 15px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+  }
+
+  .tech-icon img {
+    display: block;
+
+    width: 14px;
+    height: 14px;
+
+    object-fit: contain;
+
+    opacity: 0.72;
+
+    filter: grayscale(100%);
+
+    transition:
+      opacity $transition-fast,
+      filter $transition-fast;
+  }
+
+  .tech-skill:hover .tech-icon img {
+    opacity: 1;
+
+    filter: grayscale(0%);
+  }
+
+  /* ==================================================
+     FALLBACK ICONS
+  ================================================== */
+
+  .fallback-icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 14px;
+    height: 14px;
+
+    color: $accent-blue;
+
+    font-family: $font-mono;
+
+    font-size: 0.7rem;
+
+    font-weight: $weight-semibold;
+
+    line-height: 1;
+  }
+
+  /* ==================================================
+     RESPONSIVE
+  ================================================== */
+
+  @media (max-width: $breakpoint-lg) {
+    .tech-group {
+      padding: 1.75rem 2rem 2rem;
+    }
+
+    .tech-group-wide {
+      min-height: 220px;
+    }
+  }
+
+  @media (max-width: $breakpoint-md) {
+    .tech-stack {
+      grid-template-columns: 1fr;
+    }
+
+    /*
+     * On mobile all sections become normal
+     * single-column cards.
+     */
+
+    .tech-group-wide {
+      grid-column: auto;
+    }
+
+    .tech-group {
+      min-height: auto;
+
+      padding: 2rem;
+    }
+
+    .tech-group-header {
+      margin-bottom: 2rem;
+    }
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    .tech-group {
+      padding: 1.5rem;
+    }
+
+    .tech-group-header {
+      gap: 0.7rem;
+    }
+
+    .tech-group-line {
+      width: 32px;
+    }
+
+    .tech-group-header h3 {
+      font-size: $text-base;
+    }
+
+    .tech-skill {
+      min-height: 38px;
+
+      padding: 0.45rem 0.7rem;
+
+      font-size: $text-xs;
+    }
+
+    .tech-icon {
+      width: 14px;
+      height: 14px;
+    }
+
+    .tech-icon img {
+      width: 13px;
+      height: 13px;
+    }
+  }
+</style>

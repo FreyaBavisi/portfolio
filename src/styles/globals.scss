@@ -1,0 +1,331 @@
+// ============================================================
+// Global Styles
+// ============================================================
+
+@import "./variables";
+@import "./typography";
+
+// ------------------------------------------------------------
+// Reset
+// ------------------------------------------------------------
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+  background: $bg-primary;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+
+  background:
+    radial-gradient(
+      circle at 75% 8%,
+      rgba(77, 163, 255, 0.055),
+      transparent 28rem
+    ),
+    $bg-primary;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  border: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// ------------------------------------------------------------
+// Selection
+// ------------------------------------------------------------
+
+::selection {
+  background: rgba(77, 163, 255, 0.25);
+  color: $text-primary;
+}
+
+// ------------------------------------------------------------
+// Scrollbar
+// ------------------------------------------------------------
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.16) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: $radius-pill;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+// ------------------------------------------------------------
+// Shared layout
+// ------------------------------------------------------------
+
+.container {
+  width: min(
+    calc(100% - 3rem),
+    $container-max
+  );
+
+  margin-inline: auto;
+}
+
+.section {
+  position: relative;
+  padding-block: $section-spacing;
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+
+  margin-bottom: 4rem;
+}
+
+.section-heading {
+  max-width: 700px;
+}
+
+.section-description {
+  max-width: 520px;
+  margin-top: 1.25rem;
+
+  font-size: $text-base;
+  line-height: 1.75;
+  color: $text-secondary;
+}
+
+// ------------------------------------------------------------
+// Buttons
+// ------------------------------------------------------------
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+
+  min-height: 46px;
+  padding: 0.7rem 1.15rem;
+
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+
+  font-size: $text-sm;
+  font-weight: $weight-medium;
+
+  cursor: pointer;
+
+  transition:
+    transform $transition-base,
+    border-color $transition-base,
+    background $transition-base,
+    box-shadow $transition-base;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+}
+
+.button:focus-visible {
+  outline: 2px solid $accent-blue;
+  outline-offset: 3px;
+}
+
+.button-primary {
+  border-color: transparent;
+  background: $gradient-accent;
+  color: #ffffff;
+  box-shadow: 0 8px 28px rgba(77, 163, 255, 0.16);
+}
+
+.button-primary:hover {
+  box-shadow: 0 12px 34px rgba(77, 163, 255, 0.24);
+}
+
+.button-secondary {
+  background: rgba(255, 255, 255, 0.025);
+  color: $text-primary;
+}
+
+.button-secondary:hover {
+  border-color: $border-strong;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+// ------------------------------------------------------------
+// Cards
+// ------------------------------------------------------------
+
+.surface {
+  border: 1px solid $border-subtle;
+  border-radius: $radius-lg;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.surface-interactive {
+  transition:
+    transform $transition-base,
+    border-color $transition-base,
+    background $transition-base,
+    box-shadow $transition-base;
+}
+
+.surface-interactive:hover {
+  transform: translateY(-4px);
+  border-color: $border-default;
+  background: $bg-surface-hover;
+  box-shadow: $shadow-md;
+}
+
+// ------------------------------------------------------------
+// Technical grid background
+// ------------------------------------------------------------
+
+.grid-background {
+  background-image:
+    linear-gradient(
+      rgba(255, 255, 255, 0.035) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.035) 1px,
+      transparent 1px
+    );
+
+  background-size: 48px 48px;
+}
+
+// ------------------------------------------------------------
+// Glow
+// ------------------------------------------------------------
+
+.glow {
+  position: absolute;
+  width: 32rem;
+  height: 32rem;
+
+  border-radius: 50%;
+
+  background: $gradient-glow;
+
+  filter: blur(20px);
+  pointer-events: none;
+}
+
+// ------------------------------------------------------------
+// Tags
+// ------------------------------------------------------------
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+
+  min-height: 28px;
+  padding: 0.35rem 0.65rem;
+
+  border: 1px solid $border-subtle;
+  border-radius: $radius-pill;
+
+  font-family: $font-mono;
+  font-size: $text-xs;
+  line-height: 1;
+
+  color: $text-secondary;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+// ------------------------------------------------------------
+// Divider
+// ------------------------------------------------------------
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: $border-subtle;
+}
+
+// ------------------------------------------------------------
+// Responsive layout
+// ------------------------------------------------------------
+
+@media (max-width: $breakpoint-md) {
+  .container {
+    width: min(
+      calc(100% - 2rem),
+      $container-max
+    );
+  }
+
+  .section {
+    padding-block: $section-spacing-mobile;
+  }
+
+  .section-header {
+    align-items: flex-start;
+    flex-direction: column;
+    margin-bottom: 2.75rem;
+  }
+}
+
+// ------------------------------------------------------------
+// Reduced motion
+// ------------------------------------------------------------
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

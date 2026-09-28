@@ -1,0 +1,147 @@
+// =====================================================
+// COLORS
+// =====================================================
+
+$bg-primary: #07090d;
+$bg-secondary: #0b0f15;
+$bg-surface: #10151d;
+$bg-surface-hover: #151c26;
+
+$text-primary: #f5f7fa;
+$text-secondary: #a7b0be;
+$text-muted: #687384;
+
+$accent-blue: #60a5fa;
+$accent-blue-bright: #93c5fd;
+$accent-purple: #a855f7;
+$accent-cyan: #22d3ee;
+$accent-green: #34d399;
+
+$success: #34d399;
+
+
+// =====================================================
+// GRADIENTS
+// =====================================================
+
+$gradient-accent: linear-gradient(
+  100deg,
+  $accent-blue,
+  $accent-purple
+);
+
+$gradient-glow: radial-gradient(
+  circle at center,
+  rgba(96, 165, 250, 0.14),
+  rgba(168, 85, 247, 0.06) 45%,
+  transparent 75%
+);
+
+
+// =====================================================
+// BORDERS
+// =====================================================
+
+$border-subtle: rgba(255, 255, 255, 0.08);
+$border-default: rgba(255, 255, 255, 0.08);
+$border-hover: rgba(255, 255, 255, 0.16);
+$border-strong: rgba(255, 255, 255, 0.24);
+
+
+// =====================================================
+// TYPOGRAPHY
+// =====================================================
+
+$font-display: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+  sans-serif;
+
+$font-body: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+  sans-serif;
+
+$font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono",
+  monospace;
+
+
+// Typography scale
+$text-xs: 0.72rem;
+$text-sm: 0.85rem;
+$text-base: 1rem;
+$text-lg: 1.125rem;
+$text-xl: 1.35rem;
+$text-2xl: 1.75rem;
+$text-3xl: 2.25rem;
+$text-4xl: 3.5rem;
+$text-5xl: 5rem;
+
+
+// Typography weights
+$weight-regular: 400;
+$weight-medium: 500;
+$weight-semibold: 600;
+$weight-bold: 700;
+
+
+// =====================================================
+// LAYOUT
+// =====================================================
+
+$container-width: 1200px;
+$container-max: 1200px;
+
+$nav-height: 76px;
+
+
+// =====================================================
+// SECTION SPACING
+// =====================================================
+
+$section-padding: 7rem;
+$section-padding-mobile: 4.5rem;
+
+$section-spacing: 7rem;
+$section-spacing-mobile: 4.5rem;
+
+
+// =====================================================
+// BORDER RADIUS
+// =====================================================
+
+$radius-sm: 8px;
+$radius-md: 14px;
+$radius-lg: 20px;
+$radius-xl: 28px;
+$radius-pill: 999px;
+
+
+// =====================================================
+// SHADOWS
+// =====================================================
+
+$shadow-sm: 0 8px 24px rgba(0, 0, 0, 0.18);
+
+$shadow-md: 0 16px 40px rgba(0, 0, 0, 0.24);
+
+$shadow-lg: 0 24px 70px rgba(0, 0, 0, 0.32);
+
+
+// =====================================================
+// TRANSITIONS & EASING
+// =====================================================
+
+$ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+$ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+$ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+
+$transition-fast: 160ms $ease-out;
+$transition-base: 220ms $ease-out;
+$transition-slow: 400ms $ease-out;
+
+
+// =====================================================
+// BREAKPOINTS
+// =====================================================
+
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;

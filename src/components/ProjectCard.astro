@@ -1,0 +1,816 @@
+---
+interface Project {
+  id: string;
+  title: string;
+  category: string;
+  period: string;
+  description: string;
+  role: string;
+  technologies: string[];
+  highlights: string[];
+  featured?: boolean;
+  image?: string;
+  images?: string[];
+  links?: {
+    live?: string;
+    github?: string;
+  };
+}
+
+interface Props {
+  project: Project;
+  index: number;
+}
+
+const { project, index } = Astro.props;
+
+const images =
+  project.images && project.images.length > 0
+    ? project.images
+    : project.image
+      ? [project.image]
+      : [];
+
+const hasCarousel = images.length > 1;
+---
+
+<article
+  class:list={[
+    "project-card",
+    project.featured ? "project-card-featured" : "project-card-standard",
+  ]}
+>
+  <!-- NUMBER -->
+  <div class="project-number">
+    {String(index + 1).padStart(2, "0")}
+  </div>
+
+  <!-- ==================================================
+       VISUAL
+  ================================================== -->
+
+  <div class="project-visual">
+    {
+      hasCarousel ? (
+        <div class="carousel" data-carousel>
+          <div class="carousel-track" data-track>
+            {images.map((image, imageIndex) => (
+              <div class="carousel-slide">
+                <img
+                  src={image}
+                  alt={`${project.title} screenshot ${imageIndex + 1}`}
+                  loading={imageIndex === 0 ? "eager" : "lazy"}
+                />
+              </div>
+            ))}
+          </div>
+
+          <button
+            class="carousel-arrow carousel-prev"
+            type="button"
+            aria-label="Previous screenshot"
+            data-prev
+          >
+            ←
+          </button>
+
+          <button
+            class="carousel-arrow carousel-next"
+            type="button"
+            aria-label="Next screenshot"
+            data-next
+          >
+            →
+          </button>
+
+          <div class="carousel-dots">
+            {images.map((_, imageIndex) => (
+              <button
+                class:list={[
+                  "carousel-dot",
+                  imageIndex === 0 && "active",
+                ]}
+                type="button"
+                aria-label={`Go to screenshot ${imageIndex + 1}`}
+                data-dot={imageIndex}
+              />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div class="single-project-image">
+          {images.length > 0 && (
+            <img
+              src={images[0]}
+              alt={`${project.title} screenshot`}
+              loading="lazy"
+            />
+          )}
+        </div>
+      )
+    }
+  </div>
+
+  <!-- ==================================================
+       CONTENT
+  ================================================== -->
+
+  <div class="project-content">
+    <div class="project-meta">
+      <span>{project.category}</span>
+      <span>{project.period}</span>
+    </div>
+
+    <h2>{project.title}</h2>
+
+    <p class="project-description">
+      {project.description}
+    </p>
+
+    <div class="project-role">
+      <span class="label">ROLE</span>
+      <strong>{project.role}</strong>
+    </div>
+
+    <ul class="project-highlights">
+      {project.highlights.map((highlight) => (
+        <li>{highlight}</li>
+      ))}
+    </ul>
+
+    <div class="project-technologies">
+      {project.technologies.map((technology) => (
+        <span>{technology}</span>
+      ))}
+    </div>
+
+    {
+      project.links && (
+        <div class="project-links">
+          {project.links.live && (
+            <a
+              href={project.links.live}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Live Project ↗
+            </a>
+          )}
+
+          {project.links.github && (
+            <a
+              href={project.links.github}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GitHub ↗
+            </a>
+          )}
+        </div>
+      )
+    }
+  </div>
+</article>
+
+<script>
+  const carousels =
+    document.querySelectorAll<HTMLElement>("[data-carousel]");
+
+  carousels.forEach((carousel) => {
+    const track =
+      carousel.querySelector<HTMLElement>("[data-track]");
+
+    const slides =
+      carousel.querySelectorAll<HTMLElement>(".carousel-slide");
+
+    const prev =
+      carousel.querySelector<HTMLButtonElement>("[data-prev]");
+
+    const next =
+      carousel.querySelector<HTMLButtonElement>("[data-next]");
+
+    const dots =
+      carousel.querySelectorAll<HTMLButtonElement>("[data-dot]");
+
+    if (!track || slides.length <= 1) return;
+
+    let current = 0;
+
+    const update = (index: number) => {
+      current =
+        (index + slides.length) % slides.length;
+
+      track.style.transform =
+        `translateX(-${current * 100}%)`;
+
+      dots.forEach((dot, dotIndex) => {
+        dot.classList.toggle(
+          "active",
+          dotIndex === current
+        );
+      });
+    };
+
+    prev?.addEventListener("click", () => {
+      update(current - 1);
+    });
+
+    next?.addEventListener("click", () => {
+      update(current + 1);
+    });
+
+    dots.forEach((dot) => {
+      dot.addEventListener("click", () => {
+        const index = Number(dot.dataset.dot);
+
+        if (!Number.isNaN(index)) {
+          update(index);
+        }
+      });
+    });
+  });
+</script>
+
+<style lang="scss">
+  @use "../styles/variables" as *;
+
+  /* ==================================================
+     BASE CARD
+  ================================================== */
+
+  .project-card {
+    position: relative;
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+
+    width: 100%;
+    min-width: 0;
+
+    overflow: hidden;
+
+    background: $bg-surface;
+
+    border: 1px solid $border-subtle;
+    border-radius: $radius-xl;
+
+    transition:
+      border-color $transition-base,
+      box-shadow $transition-base;
+
+    &:hover {
+      border-color: $border-hover;
+      box-shadow: $shadow-lg;
+    }
+  }
+
+  /*
+    FEATURED SERVIRX
+
+    Because the card itself is responsible for its
+    two-column layout, we simply make the featured
+    card wider/taller through the parent grid.
+  */
+
+  .project-card-featured {
+    min-height: 650px;
+  }
+
+  .project-card-standard {
+    min-height: 560px;
+  }
+
+  /* ==================================================
+     NUMBER
+  ================================================== */
+
+  .project-number {
+    position: absolute;
+
+    top: 28px;
+    left: 28px;
+
+    z-index: 20;
+
+    width: 62px;
+    height: 62px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid $border-default;
+    border-radius: 50%;
+
+    background: rgba(7, 9, 13, 0.85);
+
+    backdrop-filter: blur(12px);
+
+    color: $text-secondary;
+
+    font-family: $font-mono;
+    font-size: $text-sm;
+  }
+
+  /* ==================================================
+     VISUAL
+  ================================================== */
+
+  .project-visual {
+    position: relative;
+
+    min-width: 0;
+    min-height: 100%;
+
+    overflow: hidden;
+
+    background:
+      radial-gradient(
+        circle at center,
+        rgba(96, 165, 250, 0.06),
+        transparent 70%
+      ),
+      $bg-secondary;
+
+    border-right: 1px solid $border-subtle;
+  }
+
+  /* ==================================================
+     NORMAL PROJECT IMAGE
+  ================================================== */
+
+  .single-project-image {
+    width: 100%;
+    height: 100%;
+
+    min-height: inherit;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 2.5rem;
+  }
+
+  .single-project-image img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+    object-position: center;
+
+    border-radius: $radius-md;
+
+    box-shadow:
+      0 20px 50px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  /* ==================================================
+     CAROUSEL
+  ================================================== */
+
+  .carousel {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    min-height: inherit;
+
+    overflow: hidden;
+  }
+
+  .carousel-track {
+    display: flex;
+
+    width: 100%;
+    height: 100%;
+
+    transition:
+      transform 450ms $ease-out;
+
+    will-change: transform;
+  }
+
+  .carousel-slide {
+    flex: 0 0 100%;
+
+    width: 100%;
+    height: 100%;
+
+    min-height: inherit;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 2rem;
+  }
+
+  /*
+    CONTAIN = entire screenshot remains visible.
+    No cropping.
+  */
+
+  .carousel-slide img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+    object-position: center;
+
+    border-radius: $radius-md;
+
+    box-shadow:
+      0 20px 50px rgba(0, 0, 0, 0.35),
+      0 0 0 1px rgba(255, 255, 255, 0.06);
+
+    user-select: none;
+  }
+
+  /* ==================================================
+     CAROUSEL CONTROLS
+  ================================================== */
+
+  .carousel-arrow {
+    position: absolute;
+
+    top: 50%;
+
+    z-index: 10;
+
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transform: translateY(-50%);
+
+    border: 1px solid $border-default;
+    border-radius: 50%;
+
+    background: rgba(7, 9, 13, 0.8);
+
+    backdrop-filter: blur(10px);
+
+    color: $text-primary;
+
+    font-size: 1.1rem;
+
+    cursor: pointer;
+
+    transition:
+      background $transition-fast,
+      border-color $transition-fast,
+      transform $transition-fast;
+
+    &:hover {
+      background: rgba(16, 21, 29, 0.95);
+      border-color: $border-hover;
+    }
+
+    &:active {
+      transform:
+        translateY(-50%)
+        scale(0.94);
+    }
+  }
+
+  .carousel-prev {
+    left: 20px;
+  }
+
+  .carousel-next {
+    right: 20px;
+  }
+
+  .carousel-dots {
+    position: absolute;
+
+    bottom: 22px;
+    left: 50%;
+
+    z-index: 10;
+
+    display: flex;
+    gap: 8px;
+
+    transform: translateX(-50%);
+
+    padding: 8px 12px;
+
+    border: 1px solid $border-subtle;
+    border-radius: $radius-pill;
+
+    background: rgba(7, 9, 13, 0.75);
+
+    backdrop-filter: blur(10px);
+  }
+
+  .carousel-dot {
+    width: 7px;
+    height: 7px;
+
+    padding: 0;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: $text-muted;
+
+    cursor: pointer;
+
+    transition:
+      width $transition-fast,
+      background $transition-fast;
+
+    &.active {
+      width: 22px;
+
+      border-radius: $radius-pill;
+
+      background: $accent-blue;
+    }
+  }
+
+  /* ==================================================
+     CONTENT
+  ================================================== */
+
+  .project-content {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 4rem;
+  }
+
+  .project-meta {
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 1.5rem;
+
+    margin-bottom: 3.5rem;
+
+    color: $text-muted;
+
+    font-family: $font-mono;
+
+    font-size: $text-sm;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+
+    span:first-child {
+      color: rgba(147, 197, 253, 0.7);
+    }
+  }
+
+  .project-content h2 {
+    margin: 0 0 1.5rem;
+
+    color: $text-primary;
+
+    font-family: $font-display;
+
+    font-size: clamp(2.5rem, 4vw, 4.5rem);
+
+    font-weight: $weight-semibold;
+
+    line-height: 0.98;
+
+    letter-spacing: -0.045em;
+  }
+
+  .project-description {
+    max-width: 580px;
+
+    margin: 0;
+
+    color: $text-secondary;
+
+    font-size: $text-lg;
+
+    line-height: 1.9;
+  }
+
+  /* ==================================================
+     ROLE
+  ================================================== */
+
+  .project-role {
+    margin-top: 3rem;
+  }
+
+  .project-role .label {
+    display: block;
+
+    margin-bottom: 0.75rem;
+
+    color: $text-muted;
+
+    font-family: $font-mono;
+
+    font-size: $text-sm;
+
+    letter-spacing: 0.1em;
+  }
+
+  .project-role strong {
+    color: $text-primary;
+
+    font-size: $text-base;
+
+    font-weight: $weight-semibold;
+  }
+
+  /* ==================================================
+     HIGHLIGHTS
+  ================================================== */
+
+  .project-highlights {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.85rem;
+
+    margin: 2rem 0 0;
+    padding: 0;
+
+    list-style: none;
+  }
+
+  .project-highlights li {
+    position: relative;
+
+    padding-left: 1.4rem;
+
+    color: $text-secondary;
+
+    line-height: 1.65;
+  }
+
+  .project-highlights li::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0.7em;
+    left: 0;
+
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: $accent-blue;
+  }
+
+  /* ==================================================
+     TECHNOLOGIES
+  ================================================== */
+
+  .project-technologies {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 0.5rem;
+
+    margin-top: auto;
+    padding-top: 2rem;
+  }
+
+  .project-technologies span {
+    padding: 0.4rem 0.7rem;
+
+    border: 1px solid $border-subtle;
+    border-radius: $radius-pill;
+
+    color: $text-muted;
+
+    font-family: $font-mono;
+    font-size: $text-xs;
+  }
+
+  /* ==================================================
+     LINKS
+  ================================================== */
+
+  .project-links {
+    display: flex;
+
+    gap: 1.25rem;
+
+    margin-top: 1.5rem;
+  }
+
+  .project-links a {
+    color: $text-primary;
+
+    font-size: $text-sm;
+
+    text-decoration: none;
+
+    &:hover {
+      color: $accent-blue-bright;
+    }
+  }
+
+  /* ==================================================
+     RESPONSIVE
+  ================================================== */
+
+  @media (max-width: $breakpoint-lg) {
+    .project-card {
+      grid-template-columns: 1fr;
+
+      min-height: auto;
+    }
+
+    .project-visual {
+      min-height: 450px;
+
+      border-right: 0;
+      border-bottom: 1px solid $border-subtle;
+    }
+
+    .carousel,
+    .carousel-slide {
+      min-height: 450px;
+    }
+
+    .project-content {
+      padding: 3rem;
+    }
+  }
+
+  @media (max-width: $breakpoint-md) {
+    .project-visual {
+      min-height: 380px;
+    }
+
+    .carousel,
+    .carousel-slide {
+      min-height: 380px;
+    }
+
+    .project-content {
+      padding: 2.5rem 2rem;
+    }
+
+    .project-content h2 {
+      font-size: 2.8rem;
+    }
+
+    .project-number {
+      top: 20px;
+      left: 20px;
+
+      width: 52px;
+      height: 52px;
+    }
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    .project-visual {
+      min-height: 280px;
+    }
+
+    .carousel,
+    .carousel-slide {
+      min-height: 280px;
+    }
+
+    .carousel-slide {
+      padding: 1rem;
+    }
+
+    .single-project-image {
+      padding: 1rem;
+    }
+
+    .project-content {
+      padding: 2rem 1.5rem;
+    }
+
+    .project-meta {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .project-content h2 {
+      font-size: 2.4rem;
+    }
+  }
+</style>

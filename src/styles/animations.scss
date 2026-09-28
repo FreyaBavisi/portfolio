@@ -1,0 +1,202 @@
+// ============================================================
+// Motion & Animation System
+// ============================================================
+
+@import "./variables";
+
+// ------------------------------------------------------------
+// Reveal animation
+// ------------------------------------------------------------
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal-up {
+  animation: reveal-up 700ms $ease-out both;
+}
+
+// ------------------------------------------------------------
+// Fade animation
+// ------------------------------------------------------------
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fade-in 600ms ease both;
+}
+
+// ------------------------------------------------------------
+// Subtle floating effect
+// ------------------------------------------------------------
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.float {
+  animation: float 5s ease-in-out infinite;
+}
+
+// ------------------------------------------------------------
+// Pulse
+// Used for system/status indicators
+// ------------------------------------------------------------
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+.pulse {
+  animation: pulse 2.2s ease-in-out infinite;
+}
+
+// ------------------------------------------------------------
+// Glow pulse
+// ------------------------------------------------------------
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.glow-pulse {
+  animation: glow-pulse 4s ease-in-out infinite;
+}
+
+// ------------------------------------------------------------
+// Draw line
+// Useful for system-map connections
+// ------------------------------------------------------------
+
+@keyframes draw-line {
+  from {
+    stroke-dashoffset: 1000;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.draw-line {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: draw-line 1.4s $ease-out forwards;
+}
+
+// ------------------------------------------------------------
+// Stagger helpers
+// ------------------------------------------------------------
+
+.stagger-1 {
+  animation-delay: 80ms;
+}
+
+.stagger-2 {
+  animation-delay: 160ms;
+}
+
+.stagger-3 {
+  animation-delay: 240ms;
+}
+
+.stagger-4 {
+  animation-delay: 320ms;
+}
+
+.stagger-5 {
+  animation-delay: 400ms;
+}
+
+// ------------------------------------------------------------
+// Hover lift
+// ------------------------------------------------------------
+
+.hover-lift {
+  transition:
+    transform $transition-base,
+    border-color $transition-base,
+    box-shadow $transition-base;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  border-color: $border-default;
+  box-shadow: $shadow-md;
+}
+
+// ------------------------------------------------------------
+// Interactive glow
+// ------------------------------------------------------------
+
+.hover-glow {
+  transition:
+    border-color $transition-base,
+    box-shadow $transition-base;
+}
+
+.hover-glow:hover {
+  border-color: rgba(77, 163, 255, 0.28);
+  box-shadow:
+    0 0 0 1px rgba(77, 163, 255, 0.04),
+    0 16px 50px rgba(77, 163, 255, 0.08);
+}
+
+// ------------------------------------------------------------
+// Reduced motion
+// ------------------------------------------------------------
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-up,
+  .fade-in,
+  .float,
+  .pulse,
+  .glow-pulse,
+  .draw-line {
+    animation: none;
+  }
+
+  .hover-lift,
+  .hover-glow {
+    transition: none;
+  }
+}

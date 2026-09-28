@@ -1,0 +1,108 @@
+@import "./variables";
+
+body {
+  font-family: $font-body;
+  color: $text-primary;
+  font-size: $text-base;
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+
+  font-family: $font-display;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+h1 {
+  font-size: clamp(3rem, 7vw, $text-5xl);
+}
+
+h2 {
+  font-size: clamp(2.25rem, 5vw, $text-4xl);
+}
+
+h3 {
+  font-size: clamp(1.5rem, 3vw, $text-2xl);
+}
+
+p {
+  margin: 0;
+  color: $text-secondary;
+}
+
+.lead {
+  max-width: 680px;
+
+  font-size: clamp(1.05rem, 1.5vw, $text-lg);
+  line-height: 1.75;
+  color: $text-secondary;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+
+  margin-bottom: 1rem;
+
+  font-family: $font-mono;
+  font-size: $text-xs;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+
+  color: $accent-blue;
+}
+
+.eyebrow::before {
+  content: "";
+
+  width: 24px;
+  height: 1px;
+
+  background: $accent-blue;
+}
+
+.gradient-text {
+  background: linear-gradient(
+    100deg,
+    $accent-blue,
+    $accent-purple
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.label {
+  font-family: $font-mono;
+  font-size: $text-xs;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $text-muted;
+}
+
+@media (max-width: $breakpoint-md) {
+  h1 {
+    font-size: clamp(2.6rem, 11vw, 4rem);
+  }
+
+  h2 {
+    font-size: clamp(2rem, 9vw, 3rem);
+  }
+
+  .lead {
+    font-size: $text-base;
+  }
+}
